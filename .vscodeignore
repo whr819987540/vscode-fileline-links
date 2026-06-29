@@ -1,0 +1,12 @@
+.history/**
+.vscode/**
+.vscode-test/**
+node_modules/**
+src/**
+test/**
+test-fixtures/**
+*.vsix
+*.log
+tsconfig.json
+package-lock.json
+

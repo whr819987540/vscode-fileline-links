@@ -1,0 +1,73 @@
+{
+  "name": "codex-markdown-fileline-links",
+  "displayName": "Codex Markdown File Line Links",
+  "description": "Open Codex-style Markdown links such as /path/file.md:236 at the referenced line.",
+  "version": "0.0.1",
+  "publisher": "local",
+  "license": "MIT",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OWNER/codex-markdown-fileline-links.git"
+  },
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:markdown",
+    "onCommand:codexMarkdownLinks.openAtLine",
+    "onCommand:codexMarkdownLinks.openPreview"
+  ],
+  "main": "./out/extension.js",
+  "extensionKind": [
+    "workspace"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "codexMarkdownLinks.openAtLine",
+        "title": "Codex Markdown Links: Open At Line"
+      },
+      {
+        "command": "codexMarkdownLinks.openPreview",
+        "title": "Codex Markdown Links: Open Preview"
+      }
+    ],
+    "configuration": {
+      "title": "Codex Markdown File Line Links",
+      "properties": {
+        "codexMarkdownLinks.preferWslForUnixPaths": {
+          "type": "boolean",
+          "default": false,
+          "description": "Open Unix absolute paths through vscode-remote WSL when VS Code is not already in a remote window."
+        },
+        "codexMarkdownLinks.wslDistro": {
+          "type": "string",
+          "default": "Ubuntu",
+          "description": "WSL distro name used when preferWslForUnixPaths is enabled."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "npm run compile && node ./test/parser.test.js",
+    "test:vscode": "npm run compile && node ./test/vscode/runTest.js",
+    "package": "npm run compile && vsce package --no-dependencies"
+  },
+  "dependencies": {
+    "markdown-it": "^14.1.0"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^14.1.2",
+    "@types/node": "^20.14.10",
+    "@types/vscode": "^1.90.0",
+    "@vscode/test-electron": "^2.5.2",
+    "@vscode/vsce": "^3.6.2",
+    "typescript": "^5.5.4"
+  }
+}
