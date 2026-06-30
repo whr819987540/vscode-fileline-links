@@ -4,13 +4,13 @@ import { parseCodexFileLineLink } from "./linkParser";
 
 export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
-    vscode.commands.registerCommand("codexMarkdownLinks.openAtLine", async (...args: unknown[]) => {
+    vscode.commands.registerCommand("filelineLinks.openAtLine", async (...args: unknown[]) => {
       await openAtLineCommand(args);
     })
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("codexMarkdownLinks.openPreview", async () => {
+    vscode.commands.registerCommand("filelineLinks.openPreview", async () => {
       const editor = vscode.window.activeTextEditor;
       if (!editor || editor.document.languageId !== "markdown") {
         await vscode.window.showWarningMessage("Open a Markdown file before running this command.");
@@ -35,13 +35,13 @@ async function openAtLineCommand(args: unknown[]) {
   }
 
   if (typeof args[0] !== "string") {
-    await vscode.window.showWarningMessage("Codex Markdown link command requires a link string.");
+    await vscode.window.showWarningMessage("File line link command requires a link string.");
     return;
   }
 
   const parsed = parseCodexFileLineLink(args[0]);
   if (!parsed) {
-    await vscode.window.showWarningMessage(`Unsupported Codex Markdown link: ${args[0]}`);
+    await vscode.window.showWarningMessage(`Unsupported file line link: ${args[0]}`);
     return;
   }
 
@@ -72,7 +72,7 @@ function registerMarkdownDocumentLinks(): vscode.Disposable {
             const start = new vscode.Position(lineIndex, match.index);
             const end = new vscode.Position(lineIndex, match.index + match[0].length);
             const commandArgs = encodeURIComponent(JSON.stringify([href]));
-            const target = vscode.Uri.parse(`command:codexMarkdownLinks.openAtLine?${commandArgs}`);
+            const target = vscode.Uri.parse(`command:filelineLinks.openAtLine?${commandArgs}`);
             const link = new vscode.DocumentLink(new vscode.Range(start, end), target);
             link.tooltip = "Open file at referenced line";
             links.push(link);
@@ -99,7 +99,7 @@ async function openFileAtLine(filePath: string, line: number, column: number) {
 }
 
 function resolveFileUri(filePath: string): vscode.Uri {
-  const config = vscode.workspace.getConfiguration("codexMarkdownLinks");
+  const config = vscode.workspace.getConfiguration("filelineLinks");
   const preferWsl = config.get<boolean>("preferWslForUnixPaths", false);
   const distro = config.get<string>("wslDistro", "Ubuntu");
 
@@ -120,4 +120,3 @@ function encodePath(filePath: string): string {
     .map((part, index) => index === 0 ? "" : encodeURIComponent(part))
     .join("/");
 }
-

@@ -99,7 +99,7 @@ function renderHtml(markdown: string, cspSource: string): string {
       color: var(--vscode-textBlockQuote-foreground);
     }
   </style>
-  <title>Codex Markdown Preview</title>
+  <title>File Line Links Preview</title>
 </head>
 <body>
   ${body}
@@ -143,4 +143,3 @@ function createNonce(): string {
   }
   return value;
 }
-

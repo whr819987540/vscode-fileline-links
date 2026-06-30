@@ -15,7 +15,7 @@ async function run() {
 async function commandOpensWindowsMarkdownPathAtRequestedLine() {
   const href = `${targetPath.replace(/\\/g, "/")}:12`;
 
-  await vscode.commands.executeCommand("codexMarkdownLinks.openAtLine", href);
+  await vscode.commands.executeCommand("filelineLinks.openAtLine", href);
 
   const editor = vscode.window.activeTextEditor;
   assert.ok(editor, "expected an active editor");
@@ -33,7 +33,7 @@ async function documentLinkProviderContributesCommandLink() {
   assert.ok(Array.isArray(links), "expected document links");
   assert.ok(
     links.some((link) => link.target?.scheme === "command"
-      && link.target.path === "codexMarkdownLinks.openAtLine"),
+      && link.target.path === "filelineLinks.openAtLine"),
     "expected a Codex command document link"
   );
 }

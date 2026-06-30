@@ -1,14 +1,14 @@
 {
-  "name": "codex-markdown-fileline-links",
-  "displayName": "Codex Markdown File Line Links",
-  "description": "Open Codex-style Markdown links such as /path/file.md:236 at the referenced line.",
+  "name": "vscode-fileline-links",
+  "displayName": "VS Code File Line Links",
+  "description": "Open Markdown file-line links such as /path/file.md:236 at the referenced line.",
   "version": "0.0.1",
   "publisher": "local",
   "license": "MIT",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/OWNER/codex-markdown-fileline-links.git"
+    "url": "https://github.com/OWNER/vscode-fileline-links.git"
   },
   "engines": {
     "vscode": "^1.90.0"
@@ -18,8 +18,8 @@
   ],
   "activationEvents": [
     "onLanguage:markdown",
-    "onCommand:codexMarkdownLinks.openAtLine",
-    "onCommand:codexMarkdownLinks.openPreview"
+    "onCommand:filelineLinks.openAtLine",
+    "onCommand:filelineLinks.openPreview"
   ],
   "main": "./out/extension.js",
   "extensionKind": [
@@ -28,23 +28,23 @@
   "contributes": {
     "commands": [
       {
-        "command": "codexMarkdownLinks.openAtLine",
-        "title": "Codex Markdown Links: Open At Line"
+        "command": "filelineLinks.openAtLine",
+        "title": "File Line Links: Open At Line"
       },
       {
-        "command": "codexMarkdownLinks.openPreview",
-        "title": "Codex Markdown Links: Open Preview"
+        "command": "filelineLinks.openPreview",
+        "title": "File Line Links: Open Preview"
       }
     ],
     "configuration": {
-      "title": "Codex Markdown File Line Links",
+      "title": "VS Code File Line Links",
       "properties": {
-        "codexMarkdownLinks.preferWslForUnixPaths": {
+        "filelineLinks.preferWslForUnixPaths": {
           "type": "boolean",
           "default": false,
           "description": "Open Unix absolute paths through vscode-remote WSL when VS Code is not already in a remote window."
         },
-        "codexMarkdownLinks.wslDistro": {
+        "filelineLinks.wslDistro": {
           "type": "string",
           "default": "Ubuntu",
           "description": "WSL distro name used when preferWslForUnixPaths is enabled."

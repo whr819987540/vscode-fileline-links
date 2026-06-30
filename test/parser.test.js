@@ -18,9 +18,9 @@ const tests = [
   },
   {
     name: "Windows Markdown path with line and column",
-    input: "E:/D%E7%9B%98%E8%BF%81%E7%A7%BB%E6%96%87%E4%BB%B6/code/projects/codex-markdown-fileine-links/test-fixtures/target.md:12:3",
+    input: "E:/D%E7%9B%98%E8%BF%81%E7%A7%BB%E6%96%87%E4%BB%B6/code/projects/vscode-fileline-links/test-fixtures/target.md:12:3",
     expected: {
-      filePath: "E:/D盘迁移文件/code/projects/codex-markdown-fileine-links/test-fixtures/target.md",
+      filePath: "E:/D盘迁移文件/code/projects/vscode-fileline-links/test-fixtures/target.md",
       line: 12,
       column: 3
     }
