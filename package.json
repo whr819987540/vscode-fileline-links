@@ -1,8 +1,8 @@
 {
   "name": "vscode-fileline-links",
-  "displayName": "VS Code File Line Links",
+  "displayName": "VSCode File Line Links",
   "description": "Open Markdown file-line links such as /path/file.md:236 at the referenced line.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "local",
   "license": "MIT",
   "private": true,
@@ -17,12 +17,16 @@
     "Other"
   ],
   "activationEvents": [
+    "onStartupFinished",
+    "onUri",
     "onLanguage:markdown",
     "onCommand:filelineLinks.openAtLine",
-    "onCommand:filelineLinks.openPreview"
+    "onCommand:filelineLinks.openPreview",
+    "onCommand:filelineLinks.copyCommandMarkdownLink"
   ],
   "main": "./out/extension.js",
   "extensionKind": [
+    "ui",
     "workspace"
   ],
   "contributes": {
@@ -34,6 +38,10 @@
       {
         "command": "filelineLinks.openPreview",
         "title": "File Line Links: Open Preview"
+      },
+      {
+        "command": "filelineLinks.copyCommandMarkdownLink",
+        "title": "File Line Links: Copy Command Markdown Link"
       }
     ],
     "configuration": {
@@ -57,7 +65,7 @@
     "watch": "tsc -watch -p ./",
     "test": "npm run compile && node ./test/parser.test.js",
     "test:vscode": "npm run compile && node ./test/vscode/runTest.js",
-    "package": "npm run compile && vsce package --no-dependencies"
+    "package": "npm run compile && vsce package"
   },
   "dependencies": {
     "markdown-it": "^14.1.0"

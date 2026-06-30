@@ -62,6 +62,14 @@ After installation, open a Markdown file and use either source-editor `Ctrl+Clic
 File Line Links: Open Preview
 ```
 
+If VS Code's built-in Markdown link handler opens the path as a missing file ending in `:line`, select or copy the file-line link and run:
+
+```text
+File Line Links: Copy Command Markdown Link
+```
+
+Paste the generated Markdown link back into your document. It uses a `vscode://local.vscode-fileline-links/open?...` target, so normal VS Code installs dispatch directly to this extension instead of the built-in Markdown file-link handler.
+
 ## Optional WSL paths
 
 The included test fixture uses a local Windows path under `test-fixtures`.

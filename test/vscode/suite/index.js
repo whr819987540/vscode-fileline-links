@@ -9,7 +9,8 @@ const sourcePath = path.join(extensionRoot, "test-fixtures", "source.md");
 async function run() {
   await commandOpensWindowsMarkdownPathAtRequestedLine();
   await documentLinkProviderContributesCommandLink();
-  console.log("VS Code integration tests passed: 2");
+  await copyCommandMarkdownLinkWritesCommandUri();
+  console.log("VS Code integration tests passed: 3");
 }
 
 async function commandOpensWindowsMarkdownPathAtRequestedLine() {
@@ -31,11 +32,19 @@ async function documentLinkProviderContributesCommandLink() {
   const links = await vscode.commands.executeCommand("vscode.executeLinkProvider", uri);
 
   assert.ok(Array.isArray(links), "expected document links");
-  assert.ok(
-    links.some((link) => link.target?.scheme === "command"
-      && link.target.path === "filelineLinks.openAtLine"),
-    "expected a Codex command document link"
-  );
+  const commandLinks = links.filter((link) => link.target?.scheme === "command"
+    && link.target.path === "filelineLinks.openAtLine");
+  assert.ok(commandLinks.length >= 2, "expected Codex command document links for Markdown and bare paths");
+}
+
+async function copyCommandMarkdownLinkWritesCommandUri() {
+  const href = `${targetPath.replace(/\\/g, "/")}:12`;
+  await vscode.env.clipboard.writeText(href);
+  await vscode.commands.executeCommand("filelineLinks.copyCommandMarkdownLink");
+
+  const text = await vscode.env.clipboard.readText();
+  assert.match(text, /^\[\\\[local test\\\] Jump Target With Spaces\.md:12\]\(vscode:\/\/local\.vscode-fileline-links\/open\?/);
+  assert.ok(text.includes(new URLSearchParams({ href }).toString()));
 }
 
 function normalizePath(value) {
@@ -43,4 +52,3 @@ function normalizePath(value) {
 }
 
 module.exports = { run };
-
