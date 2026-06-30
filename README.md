@@ -11,16 +11,20 @@ The Markdown source is not modified. The extension parses the link target at cli
 
 ## Usage
 
-1. Run `npm install`.
-2. Run `npm run compile`.
-3. Launch an Extension Development Host:
+1. To install required packages, run `npm install`.
+2. To compile, run `npm run compile`.
+3. To run unit tests of the parser, run `npm test`.
+4. To run VSCode extension test, run `npm run test:vscode`
+5. Launch an Extension Development Host:
 
    ```powershell
    code --new-window --extensionDevelopmentPath "E:/path/to" "E:/path/to"
    ```
 
-4. Open `test-fixtures/source.md`.
-5. Either click the source-editor link, or run `File Line Links: Open Preview` and click the rendered link.
+6. Open `test-fixtures/source.md`.
+7. Either click the source-editor link, or run `File Line Links: Open Preview` and click the rendered link.
+8. To generate VSIX, run `npm run package`.
+
 
 ## How it works
 
