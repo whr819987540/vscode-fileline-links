@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0
+
+- Support Linux usage by running the extension in the workspace extension host only.
+- Add Linux Markdown fixture links for absolute paths, encoded filenames, and repository files.
+- Run VS Code integration tests on headless Linux through `xvfb-run` when no display server is available.
+- Add FAQ guidance for VS Code Markdown Preview webview/cache startup failures on Windows and Linux.
+- Exclude `.claude` files from generated extension packages.
+
 ## 0.0.4
 
 - Support file-line links from Markdown files to common code files such as `.ts`, `.js`, `.py`, `.java`, `.cpp`, `.go`, `.rs`, `.vue`, and `.yaml`.

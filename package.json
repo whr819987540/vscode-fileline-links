@@ -2,7 +2,7 @@
   "name": "vscode-fileline-links",
   "displayName": "VSCode File Line Links",
   "description": "Open Markdown file-line links such as /path/file.ts:236 at the referenced line.",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "publisher": "local",
   "license": "MIT",
   "private": true,
