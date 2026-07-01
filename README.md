@@ -88,3 +88,83 @@ If VS Code is running locally on Windows and links point to WSL paths, set:
   "filelineLinks.wslDistro": "Ubuntu"
 }
 ```
+
+## FAQ
+
+### I installed the extension, but Markdown Preview still does not work
+
+If VS Code's built-in Markdown Preview reports a webview or service worker startup error, that failure happens before this extension can run. The preview page has not rendered yet, so the extension's `markdownItPlugins`, link rewriting, and click handling are never executed.
+
+This is usually a VS Code webview cache or user-data issue. Try the cleanup steps for your operating system.
+
+#### Windows
+
+1. Close all VS Code windows.
+2. Confirm that no `Code.exe` process is still running, or stop them from PowerShell:
+
+   ```powershell
+   Get-Process Code -ErrorAction SilentlyContinue | Stop-Process
+   ```
+
+3. Clear VS Code's webview and service worker caches:
+
+   ```powershell
+   Remove-Item "$env:APPDATA\Code\Service Worker" -Recurse -Force -ErrorAction SilentlyContinue
+   Remove-Item "$env:APPDATA\Code\WebStorage" -Recurse -Force -ErrorAction SilentlyContinue
+   Remove-Item "$env:APPDATA\Code\Cache" -Recurse -Force -ErrorAction SilentlyContinue
+   Remove-Item "$env:APPDATA\Code\Code Cache" -Recurse -Force -ErrorAction SilentlyContinue
+   Remove-Item "$env:APPDATA\Code\GPUCache" -Recurse -Force -ErrorAction SilentlyContinue
+   ```
+
+4. Reopen VS Code, then open VS Code's built-in Markdown Preview for `test-fixtures/source.md`.
+5. If the same error still appears, start VS Code with a clean user-data directory to check whether the current VS Code profile data is corrupted:
+
+   ```powershell
+   code --user-data-dir "$env:TEMP\vscode-webview-clean" --extensions-dir "$env:TEMP\vscode-webview-clean-ext" "E:\D盘迁移文件\code\projects\vscode-fileline-links"
+   ```
+
+If Markdown Preview works in the clean directory, the problem is in `%APPDATA%\Code` cache or state. If the clean directory also fails, the issue is more likely the current VS Code version or Electron/webview environment. In that case, also try:
+
+```powershell
+code --disable-gpu
+```
+
+#### Linux
+
+1. Close all VS Code windows.
+2. Confirm that no `code` process is still running, or stop the main VS Code processes from a terminal:
+
+   ```sh
+   pgrep -a code
+   pkill -x code || true
+   ```
+
+3. Clear VS Code's webview and service worker caches:
+
+   ```sh
+   rm -rf "$HOME/.config/Code/Service Worker" \
+          "$HOME/.config/Code/WebStorage" \
+          "$HOME/.config/Code/Cache" \
+          "$HOME/.config/Code/Code Cache" \
+          "$HOME/.config/Code/CachedData" \
+          "$HOME/.config/Code/GPUCache"
+   ```
+
+4. Reopen VS Code, then open VS Code's built-in Markdown Preview for `test-fixtures/source.md`.
+5. If the same error still appears, start VS Code with a clean user-data directory to check whether the current VS Code profile data is corrupted:
+
+   ```sh
+   code --user-data-dir "$TMPDIR/vscode-webview-clean" --extensions-dir "$TMPDIR/vscode-webview-clean-ext" "$(pwd)"
+   ```
+
+If `TMPDIR` is not set, use `/tmp` instead:
+
+```sh
+code --user-data-dir "/tmp/vscode-webview-clean" --extensions-dir "/tmp/vscode-webview-clean-ext" "$(pwd)"
+```
+
+If Markdown Preview works in the clean directory, the problem is in `~/.config/Code` cache or state. If the clean directory also fails, the issue is more likely the current VS Code version or Electron/webview environment. In that case, also try:
+
+```sh
+code --disable-gpu
+```
