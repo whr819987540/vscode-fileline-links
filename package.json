@@ -2,7 +2,7 @@
   "name": "vscode-fileline-links",
   "displayName": "VSCode File Line Links",
   "description": "Open Markdown file-line links such as /path/file.md:236 at the referenced line.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "local",
   "license": "MIT",
   "private": true,
@@ -30,6 +30,10 @@
     "workspace"
   ],
   "contributes": {
+    "markdown.markdownItPlugins": true,
+    "markdown.previewScripts": [
+      "./out/previewClickHandler.js"
+    ],
     "commands": [
       {
         "command": "filelineLinks.openAtLine",

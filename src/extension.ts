@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { openCodexPreview } from "./preview";
 import { parseCodexFileLineLink } from "./linkParser";
+import extendMarkdownIt from "./markdownItPlugin";
 
 export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
@@ -36,6 +37,10 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(registerMarkdownDocumentLinks());
+
+  return {
+    extendMarkdownIt
+  };
 }
 
 export function deactivate() {

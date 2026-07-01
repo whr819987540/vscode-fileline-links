@@ -22,7 +22,7 @@ The Markdown source is not modified. The extension parses the link target at cli
    ```
 
 6. Open `test-fixtures/source.md`.
-7. Either click the source-editor link, or run `File Line Links: Open Preview` and click the rendered link.
+7. Click either the source-editor link or the rendered link in VS Code's built-in Markdown Preview.
 8. To generate VSIX, run `npm run package`.
 
 ## How it works
@@ -37,7 +37,9 @@ In the source editor, the extension registers a Markdown `DocumentLinkProvider`.
 
 When a matching link is found, the provider contributes a `command:` target instead of treating the full string as a literal file path. The command decodes the path, opens the referenced Markdown file with `vscode.workspace.openTextDocument`, and calls `vscode.window.showTextDocument` with a selection at the requested line and column.
 
-For rendered Markdown, the built-in VS Code Markdown Preview does not expose a supported way to replace its link-open behavior for this non-standard `file.md:line` syntax. The extension therefore provides its own command, `File Line Links: Open Preview`. This preview renders Markdown in a webview with `markdown-it`, intercepts link clicks inside the webview, sends the clicked `href` back to the extension host, and reuses the same open-at-line command.
+For rendered Markdown, the extension contributes a Markdown preview `markdown-it` plugin and a preview click script. The plugin marks matching rendered links without modifying the source Markdown. The click script intercepts those links before VS Code's built-in preview treats `E:` as a URI scheme, then dispatches to this extension's `vscode://local.vscode-fileline-links/open?...` URI handler. It also recognizes bare local Markdown paths before the default linkifier can split Windows paths with spaces.
+
+The `File Line Links: Open Preview` command remains available as a standalone preview that uses the same link rewriting logic.
 
 The parser intentionally accepts only local absolute Markdown paths with `.md` or `.markdown` extensions. It rejects URI schemes such as `http:`, `https:`, and `vscode:` so normal external links are not captured.
 
@@ -53,7 +55,7 @@ npm run package
 Install the generated `.vsix` file:
 
 ```powershell
-code --install-extension .\vscode-fileline-links-0.0.1.vsix
+code --install-extension .\vscode-fileline-links-0.0.3.vsix
 ```
 
 After installation, open a Markdown file and use either source-editor `Ctrl+Click` / `Follow Link`, or run:

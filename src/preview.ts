@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import MarkdownIt from "markdown-it";
 import { parseCodexFileLineLink } from "./linkParser";
+import extendMarkdownIt from "./markdownItPlugin";
 
 type OpenFileAtLine = (filePath: string, line: number, column: number) => Promise<void>;
 
@@ -53,7 +54,7 @@ function renderHtml(markdown: string, cspSource: string): string {
     html: false,
     linkify: true,
     typographer: true
-  });
+  }).use(extendMarkdownIt);
 
   const body = md.render(markdown);
   const nonce = createNonce();

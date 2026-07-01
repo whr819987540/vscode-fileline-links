@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.3
+
+- Support rendered links in VS Code's built-in Markdown Preview by contributing a Markdown preview `markdown-it` plugin.
+- Intercept supported rendered file-line links before the built-in preview opens `E:/path/file.md:12` as a literal filename.
+- Linkify bare local Markdown file-line paths in preview before the default linkifier can split paths containing spaces.
+
 ## 0.0.2
 
 - Keep the extension version at `0.0.2`.
