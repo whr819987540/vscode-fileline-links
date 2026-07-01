@@ -8,3 +8,4 @@ test-fixtures/**
 *.log
 tsconfig.json
 package-lock.json
+.claude/**
