@@ -1,7 +1,10 @@
 import MarkdownIt from "markdown-it";
-import { parseCodexFileLineLink } from "./linkParser";
+import { parseCodexFileLineLink, supportedFileExtensionPattern } from "./linkParser";
 
-const bareLinkPattern = /(?:[a-zA-Z]:[\\/]|\/)[^\r\n]*?\.(?:md|markdown):\d+(?::\d+)?/gi;
+const bareLinkPattern = new RegExp(
+  `(?:[a-zA-Z]:[\\\\/]|/)[^\\r\\n]*?\\.(?:${supportedFileExtensionPattern}):\\d+(?::\\d+)?`,
+  "gi"
+);
 
 export default function extendMarkdownIt(md: MarkdownIt): MarkdownIt {
   md.inline.ruler.before("text", "filelineLinksBareLinks", filelineBareLinkRule);

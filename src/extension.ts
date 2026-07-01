@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { openCodexPreview } from "./preview";
-import { parseCodexFileLineLink } from "./linkParser";
+import { parseCodexFileLineLink, supportedFileExtensionPattern } from "./linkParser";
 import extendMarkdownIt from "./markdownItPlugin";
 
 export function activate(context: vscode.ExtensionContext) {
@@ -77,7 +77,10 @@ function registerMarkdownDocumentLinks(): vscode.Disposable {
       provideDocumentLinks(document) {
         const links: vscode.DocumentLink[] = [];
         const inlineLinkPattern = /\[[^\]\r\n]+\]\((<[^>\r\n]+>|[^)\s\r\n]+)\)/g;
-        const bareLinkPattern = /(?:[a-zA-Z]:[\\/]|\/)[^\r\n]*?\.(?:md|markdown):\d+(?::\d+)?/gi;
+        const bareLinkPattern = new RegExp(
+          `(?:[a-zA-Z]:[\\\\/]|/)[^\\r\\n]*?\\.(?:${supportedFileExtensionPattern}):\\d+(?::\\d+)?`,
+          "gi"
+        );
 
         for (let lineIndex = 0; lineIndex < document.lineCount; lineIndex++) {
           const lineText = document.lineAt(lineIndex).text;

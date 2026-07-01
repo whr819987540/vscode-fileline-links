@@ -7,6 +7,8 @@ const extendMarkdownIt = require("../out/markdownItPlugin").default;
 const extensionRoot = path.resolve(__dirname, "..");
 const targetPath = path.join(extensionRoot, "test-fixtures", "[local test] Jump Target With Spaces.md").replace(/\\/g, "/");
 const encodedTargetPath = encodeURI(targetPath);
+const codeTargetPath = path.join(extensionRoot, "test-fixtures", "code-target.ts").replace(/\\/g, "/");
+const encodedCodeTargetPath = encodeURI(codeTargetPath);
 
 const tests = [
   {
@@ -37,12 +39,21 @@ const tests = [
     }
   },
   {
+    name: "encoded TypeScript path with line and column",
+    input: `${encodedCodeTargetPath}:2:5`,
+    expected: {
+      filePath: codeTargetPath,
+      line: 2,
+      column: 5
+    }
+  },
+  {
     name: "reject vscode scheme",
     input: "vscode://file/E:/work/target.md:9",
     expected: undefined
   },
   {
-    name: "reject non-markdown file",
+    name: "reject unsupported non-code file",
     input: "E:/work/target.txt:9",
     expected: undefined
   }
@@ -55,12 +66,17 @@ for (const test of tests) {
 const md = new MarkdownIt({ html: false, linkify: true }).use(extendMarkdownIt);
 const rendered = md.render([
   `[target markdown](${encodedTargetPath}:12)`,
+  `[target code](${encodedCodeTargetPath}:2)`,
   "",
-  `${targetPath}:12`
+  `${targetPath}:12`,
+  "",
+  `${codeTargetPath}:2`
 ].join("\n"));
 
 assert.ok(rendered.includes(`data-fileline-href="${encodedTargetPath}:12"`), "expected Markdown preview inline link to preserve file-line target");
+assert.ok(rendered.includes(`data-fileline-href="${encodedCodeTargetPath}:2"`), "expected Markdown preview code link to preserve file-line target");
 assert.ok(rendered.includes(`data-fileline-href="${targetPath}:12"`), "expected Markdown preview bare path to preserve file-line target");
+assert.ok(rendered.includes(`data-fileline-href="${codeTargetPath}:2"`), "expected Markdown preview bare code path to preserve file-line target");
 assert.ok(!rendered.includes("http://Spaces.md:12"), "expected bare path not to be split by default linkify");
 
-console.log(`parser/render tests passed: ${tests.length + 3}`);
+console.log(`parser/render tests passed: ${tests.length + 5}`);

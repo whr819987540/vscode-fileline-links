@@ -4,6 +4,64 @@ export interface ParsedCodexLink {
   column: number;
 }
 
+export const supportedFileExtensionPattern = [
+  "md",
+  "markdown",
+  "js",
+  "jsx",
+  "ts",
+  "tsx",
+  "mjs",
+  "cjs",
+  "mts",
+  "cts",
+  "json",
+  "jsonc",
+  "py",
+  "pyw",
+  "java",
+  "c",
+  "h",
+  "cc",
+  "cpp",
+  "cxx",
+  "hh",
+  "hpp",
+  "hxx",
+  "cs",
+  "go",
+  "rs",
+  "php",
+  "rb",
+  "swift",
+  "kt",
+  "kts",
+  "scala",
+  "sh",
+  "bash",
+  "zsh",
+  "fish",
+  "ps1",
+  "psm1",
+  "psd1",
+  "bat",
+  "cmd",
+  "sql",
+  "html",
+  "htm",
+  "css",
+  "scss",
+  "sass",
+  "less",
+  "vue",
+  "svelte",
+  "astro",
+  "yml",
+  "yaml",
+  "toml",
+  "xml"
+].join("|");
+
 function safeDecodeURIComponent(value: string): string {
   try {
     return decodeURIComponent(value);
@@ -24,12 +82,7 @@ export function parseCodexFileLineLink(href: string): ParsedCodexLink | undefine
   const raw = safeDecodeURIComponent(stripMarkdownAngleBrackets(href));
 
   const parsed = parseLocalAbsolutePathLine(raw);
-  if (!parsed) {
-    return undefined;
-  }
-
-  const normalized = parsed.filePath.replace(/\\/g, "/");
-  if (!isSupportedMarkdownPath(normalized)) {
+  if (!parsed || !hasSupportedFileExtension(parsed.filePath)) {
     return undefined;
   }
 
@@ -41,7 +94,10 @@ export function parseCodexFileLineLink(href: string): ParsedCodexLink | undefine
 }
 
 function parseLocalAbsolutePathLine(value: string): ParsedCodexLink | undefined {
-  const windows = value.match(/^([a-zA-Z]:[\\/].+\.(?:md|markdown)):(\d+)(?::(\d+))?$/i);
+  const windows = value.match(new RegExp(
+    `^([a-zA-Z]:[\\\\/].+\\.(?:${supportedFileExtensionPattern})):(\\d+)(?::(\\d+))?$`,
+    "i"
+  ));
   if (windows) {
     return {
       filePath: windows[1],
@@ -50,7 +106,10 @@ function parseLocalAbsolutePathLine(value: string): ParsedCodexLink | undefined 
     };
   }
 
-  const unix = value.match(/^(\/.+\.(?:md|markdown)):(\d+)(?::(\d+))?$/i);
+  const unix = value.match(new RegExp(
+    `^(/.+\\.(?:${supportedFileExtensionPattern})):(\\d+)(?::(\\d+))?$`,
+    "i"
+  ));
   if (unix) {
     return {
       filePath: unix[1],
@@ -62,6 +121,6 @@ function parseLocalAbsolutePathLine(value: string): ParsedCodexLink | undefined 
   return undefined;
 }
 
-function isSupportedMarkdownPath(value: string): boolean {
-  return /\.(md|markdown)$/i.test(value);
+function hasSupportedFileExtension(value: string): boolean {
+  return new RegExp(`\\.(${supportedFileExtensionPattern})$`, "i").test(value.replace(/\\/g, "/"));
 }

@@ -4,13 +4,15 @@ const vscode = require("vscode");
 
 const extensionRoot = path.resolve(__dirname, "../../..");
 const targetPath = path.join(extensionRoot, "test-fixtures", "[local test] Jump Target With Spaces.md");
+const codeTargetPath = path.join(extensionRoot, "test-fixtures", "code-target.ts");
 const sourcePath = path.join(extensionRoot, "test-fixtures", "source.md");
 
 async function run() {
   await commandOpensWindowsMarkdownPathAtRequestedLine();
+  await commandOpensWindowsCodePathAtRequestedLine();
   await documentLinkProviderContributesCommandLink();
   await copyCommandMarkdownLinkWritesCommandUri();
-  console.log("VS Code integration tests passed: 3");
+  console.log("VS Code integration tests passed: 4");
 }
 
 async function commandOpensWindowsMarkdownPathAtRequestedLine() {
@@ -24,6 +26,18 @@ async function commandOpensWindowsMarkdownPathAtRequestedLine() {
   assert.equal(editor.selection.active.line, 11);
 }
 
+async function commandOpensWindowsCodePathAtRequestedLine() {
+  const href = `${codeTargetPath.replace(/\\/g, "/")}:2:3`;
+
+  await vscode.commands.executeCommand("filelineLinks.openAtLine", href);
+
+  const editor = vscode.window.activeTextEditor;
+  assert.ok(editor, "expected an active editor");
+  assert.equal(normalizePath(editor.document.uri.fsPath), normalizePath(codeTargetPath));
+  assert.equal(editor.selection.active.line, 1);
+  assert.equal(editor.selection.active.character, 2);
+}
+
 async function documentLinkProviderContributesCommandLink() {
   const uri = vscode.Uri.file(sourcePath);
   const document = await vscode.workspace.openTextDocument(uri);
@@ -34,7 +48,7 @@ async function documentLinkProviderContributesCommandLink() {
   assert.ok(Array.isArray(links), "expected document links");
   const commandLinks = links.filter((link) => link.target?.scheme === "command"
     && link.target.path === "filelineLinks.openAtLine");
-  assert.ok(commandLinks.length >= 2, "expected Codex command document links for Markdown and bare paths");
+  assert.ok(commandLinks.length >= 4, "expected Codex command document links for Markdown, code, and bare paths");
 }
 
 async function copyCommandMarkdownLinkWritesCommandUri() {

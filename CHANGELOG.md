@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.0.4
+
+- Support file-line links from Markdown files to common code files such as `.ts`, `.js`, `.py`, `.java`, `.cpp`, `.go`, `.rs`, `.vue`, and `.yaml`.
+- Keep Markdown preview and source-editor handling aligned for inline links and bare local paths.
+
 ## 0.0.3
 
 - Support rendered links in VS Code's built-in Markdown Preview by contributing a Markdown preview `markdown-it` plugin.

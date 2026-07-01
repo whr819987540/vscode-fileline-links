@@ -4,10 +4,11 @@ Open Markdown file-line links such as:
 
 ```md
 [target markdown](E:/path/to/file.md:12)
+[target code](E:/path/to/file.ts:48:5)
 [target markdown](E:/path/to/%5Bpaper%5D%20with%20spaces.md:236)
 ```
 
-The Markdown source is not modified. The extension parses the link target at click time and opens the referenced Markdown file at the requested line.
+The Markdown source is not modified. The extension parses the link target at click time and opens the referenced Markdown or code file at the requested line.
 
 ## Usage
 
@@ -29,19 +30,20 @@ The Markdown source is not modified. The extension parses the link target at cli
 
 The extension does not rewrite Markdown files. It only changes how VS Code handles matching links at runtime.
 
-In the source editor, the extension registers a Markdown `DocumentLinkProvider`. VS Code asks all registered document link providers for clickable ranges in the current document. This extension scans inline Markdown links and looks for absolute Markdown file paths ending in `:line` or `:line:column`, for example:
+In the source editor, the extension registers a Markdown `DocumentLinkProvider`. VS Code asks all registered document link providers for clickable ranges in the current document. This extension scans inline Markdown links and looks for absolute Markdown or code file paths ending in `:line` or `:line:column`, for example:
 
 ```md
 [target markdown](E:/path/to/%5Bpaper%5D%20with%20spaces.md:236)
+[target code](E:/path/to/src/extension.ts:48:5)
 ```
 
-When a matching link is found, the provider contributes a `command:` target instead of treating the full string as a literal file path. The command decodes the path, opens the referenced Markdown file with `vscode.workspace.openTextDocument`, and calls `vscode.window.showTextDocument` with a selection at the requested line and column.
+When a matching link is found, the provider contributes a `command:` target instead of treating the full string as a literal file path. The command decodes the path, opens the referenced file with `vscode.workspace.openTextDocument`, and calls `vscode.window.showTextDocument` with a selection at the requested line and column.
 
-For rendered Markdown, the extension contributes a Markdown preview `markdown-it` plugin and a preview click script. The plugin marks matching rendered links without modifying the source Markdown. The click script intercepts those links before VS Code's built-in preview treats `E:` as a URI scheme, then dispatches to this extension's `vscode://local.vscode-fileline-links/open?...` URI handler. It also recognizes bare local Markdown paths before the default linkifier can split Windows paths with spaces.
+For rendered Markdown, the extension contributes a Markdown preview `markdown-it` plugin and a preview click script. The plugin marks matching rendered links without modifying the source Markdown. The click script intercepts those links before VS Code's built-in preview treats `E:` as a URI scheme, then dispatches to this extension's `vscode://local.vscode-fileline-links/open?...` URI handler. It also recognizes bare local Markdown and code paths before the default linkifier can split Windows paths with spaces.
 
 The `File Line Links: Open Preview` command remains available as a standalone preview that uses the same link rewriting logic.
 
-The parser intentionally accepts only local absolute Markdown paths with `.md` or `.markdown` extensions. It rejects URI schemes such as `http:`, `https:`, and `vscode:` so normal external links are not captured.
+The parser intentionally accepts only local absolute Markdown and common code paths with supported file extensions. It rejects URI schemes such as `http:`, `https:`, and `vscode:` so normal external links are not captured.
 
 ## Install from VSIX
 
@@ -55,7 +57,7 @@ npm run package
 Install the generated `.vsix` file:
 
 ```powershell
-code --install-extension .\vscode-fileline-links-0.0.3.vsix
+code --install-extension .\vscode-fileline-links-0.0.4.vsix
 ```
 
 After installation, open a Markdown file and use either source-editor `Ctrl+Click` / `Follow Link`, or run:
