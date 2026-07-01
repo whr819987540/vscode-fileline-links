@@ -26,7 +26,6 @@
   ],
   "main": "./out/extension.js",
   "extensionKind": [
-    "ui",
     "workspace"
   ],
   "contributes": {
